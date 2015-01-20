@@ -1,0 +1,88 @@
+
+//printer queue
+
+/*Psudocode
+read the input file by "Dequeue", which is similar to queue but both way of beggining and end, also can be used more flexibly.
+Because the input must have multiple factor (as interger and boolean for following the target job), so push back both integer and boolean
+
+and then, we make the calculator function.  
+first, store the most front integer and then delete.  After that put in the end. 
+and then, if there is exist of bigger priority, keep delete the integer in the beggining.  
+if not, adding up to the answer until it gets to the target job
+*/
+
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+
+
+using namespace std;
+
+int n;
+int m;
+int answer;
+
+struct MyJob
+{
+	int priority;
+	bool target = false;
+};
+
+deque<MyJob> jobs;
+
+void calctimes(){
+	while (!jobs.empty()){
+		MyJob J = jobs.front();    //referencing the first element of the queue
+		jobs.pop_front();     //delete the first element
+
+		bool higherPriorityExists = false;
+		for (int i = 0; i < jobs.size(); i++){
+			if (J.priority < jobs[i].priority){ //if there is interger has bigger priority
+				higherPriorityExists = true;
+			}
+		}
+		/*there is some jobs in the queue with a higer priority than job J*/
+		if (higherPriorityExists)
+		{
+			jobs.push_back(J); //pushing the first job into the end
+
+		}
+		else{ //after finishing ordering,
+			answer++; //adding up into integer answer!!!!!! until...
+			if (J.target == true) return; // if its our target print job, then just return we dont care about the rest
+		}
+
+	}
+}
+
+int main(){
+	//freopen("print.in", "r", stdin);
+
+	int NumTest;
+	cin >> NumTest;
+
+	//input
+	for (int i = 0; i< NumTest; i++){
+		cin >> n >> m;
+		jobs.clear();
+		answer = 0;
+		for (int j = 0; j < n; j++){
+			int num;
+			cin >> num;
+			MyJob myjob;
+			myjob.priority = num;
+			if (j == m){  //if j is at m (target position)
+				myjob.target = true;
+			}
+			jobs.push_back(myjob);
+		}
+		calctimes();
+		cout << answer << endl;
+	}
+
+	return 0;
+}

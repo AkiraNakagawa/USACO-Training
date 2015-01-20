@@ -1,0 +1,94 @@
+//bunnies
+
+/* psudocode
+ out of bound function
+ recursion function
+    - add char c in the parametor so that I can now find a character.  and change into boolean function
+ main
+    - for main, set boolean which finds 'C' from row and cloumn.  if the boolean is true, then answer is "yes" if not, "no"
+ */
+#include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+vector <vector <char> > cage;
+vector <vector <bool> > visited;
+
+int R, C;
+
+string answer;
+
+
+bool outofbound(int currentColumn, int currentRow){
+    if (currentColumn < 0) return true;
+    if (currentColumn > C - 1) return true;
+    if (currentRow < 0) return true;
+    if (currentRow > R - 1) return true;
+    return false;
+}
+
+bool search(int currentColumn, int currentRow, char c){
+    if (outofbound(currentColumn, currentRow)) return false;
+    if (visited[currentRow][currentColumn]) return false;
+    if (cage[currentRow][currentColumn] == c) return true;
+    if (cage[currentRow][currentColumn] == '#') return false;
+    else visited[currentRow][currentColumn] = true;
+    
+    
+    if (search(currentColumn,currentRow-1,c)  ||
+        search(currentColumn, currentRow+1, c)   ||
+        search(currentColumn-1, currentRow,c)  ||
+        search(currentColumn+1, currentRow,c ) ) {
+        return true;
+    } else {
+        return false;
+    }
+    
+}
+
+
+int main(){
+    //freopen("bunnies.in", "r", stdin);
+    if (freopen("bunnies.in", "r", stdin) ==NULL) return 1;
+    
+    
+    int T;
+    cin >> T;
+    cerr << "T = " << T << endl;
+    for (int k=0; k<T;k++){
+        cin >> R >> C;
+        cage.clear();
+        visited.clear();
+        
+        for (int i = 0; i < R; i++){
+            vector <char> cage2;
+            vector <bool> visited2;
+            for (int j = 0; j < C; j++){
+                char c;
+                cin >> c;
+                cage2.push_back(c);
+                visited2.push_back(false);
+            }
+            cage.push_back(cage2);
+            visited.push_back(visited2);
+        }
+        
+        
+        for (int i = 0; i < R; i++){
+            for (int j = 0; j < C; j++){
+                if (cage[i][j] == 'P'){
+                    bool found = search(j, i, 'C');
+                    if (found)  answer = "yes";
+                    else    answer = "no";
+                }
+            }
+        }
+        cout << answer << endl;
+    }
+    
+    
+    return 0;
+}
